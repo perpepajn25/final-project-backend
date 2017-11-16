@@ -24,7 +24,17 @@ class Api::V1::DecksController < ApplicationController
 
   def public
     @decks = Deck.joins(:user_decks).where('public = ?', 'true').where('user_decks.user_id !=?', current_user.id)
-    render json: @decks
+    if @decks
+      render_decks = {decks: JSON.parse(@decks.to_json(
+        include: [
+            :cards,
+            :stars,
+            :forks
+          ]))}
+      render json: render_decks, status: 202
+    else
+      render json: { message: 'No Public Decks'}, status: 401
+    end
   end
 
 end
