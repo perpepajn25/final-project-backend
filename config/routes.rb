@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       post '/login', to: 'auth#login'
       post '/signup', to: 'auth#create'
       post '/reauth', to: 'auth#reauth'
+      get '/public_decks', to: 'decks#public'
     end
   end
 

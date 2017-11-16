@@ -27,7 +27,7 @@ class Api::V1::AuthController < ApplicationController
 
   def reauth
     if current_user
-      token = encode_token({user_id: @user.id})
+    @user = current_user
       render json: @user.to_json(
           include: {
               decks: {
@@ -47,7 +47,9 @@ class Api::V1::AuthController < ApplicationController
     @user = User.new(username: user_login_params[:username], password: user_login_params[:password])
     if @user.save
       token = encode_token({user_id: @user.id})
-      render json: {jwt: token}, status: 202
+      user_hash = JSON.parse(@user.to_json)
+      user_hash["jwt"] = token
+      render json: user_hash, status: 202
     else
       render json: { message: 'Username already exists'}, status: 401
     end

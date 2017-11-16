@@ -1,8 +1,8 @@
 class Api::V1::DecksController < ApplicationController
 
   def create
-    if current_user
-      @deck = Deck.create(title: params[:deck][:title])
+      @deck = Deck.new(title: params[:deck][:title], subject: params[:deck][:subject], public: params[:deck][:public])
+      if @deck.save
       UserDeck.create(user: current_user, deck: @deck)
       params[:deck][:cards].each do |card|
         Card.create(deck: @deck, question: card[:question], answer: card[:answer])
@@ -20,6 +20,11 @@ class Api::V1::DecksController < ApplicationController
     else
       render json: { message: 'Deck Invalid'}, status: 401
     end
+  end
+
+  def public
+    @decks = Deck.joins(:user_decks).where('public = ?', 'true').where('user_decks.user_id !=?', current_user.id)
+    render json: @decks
   end
 
 end

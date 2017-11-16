@@ -9,8 +9,8 @@
 natalie = User.create(username: "nataliepep", password: "12345" )
 john = User.create(username: "johndoe", password: "12345" )
 
-science = Deck.create(title: "Periodic Table")
-math = Deck.create(title: "Math")
+science = Deck.create(title: "Periodic Table", subject: "Science")
+math = Deck.create(title: "Math", subject: "Mathematics")
 
 
 UserDeck.create(user: natalie, deck: science)
